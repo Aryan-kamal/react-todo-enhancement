@@ -59,10 +59,34 @@ export const defaultUser: User = {
   deletedCategories: [],
   favoriteCategories: ["ebe6ce8b-471f-4632-a23b-578e1038ce51"],
   priorities: [
-    { id: "critical-priority", name: "Critical", color: "#FF2F2F", emoji: "🔴", level: 1 },
-    { id: "high-priority", name: "High", color: "#FF9518", emoji: "🟠", level: 2 },
-    { id: "medium-priority", name: "Medium", color: "#835CF0", emoji: "🟣", level: 3 },
-    { id: "low-priority", name: "Low", color: "#4898F4", emoji: "🔵", level: 4 },
+    {
+      id: "12345678-1234-1234-1234-123456789001",
+      name: "Critical",
+      color: "#FF2F2F",
+      emoji: "🔴",
+      level: 1,
+    },
+    {
+      id: "12345678-1234-1234-1234-123456789002",
+      name: "High",
+      color: "#FF9518",
+      emoji: "🟠",
+      level: 2,
+    },
+    {
+      id: "12345678-1234-1234-1234-123456789003",
+      name: "Medium",
+      color: "#835CF0",
+      emoji: "🟣",
+      level: 3,
+    },
+    {
+      id: "12345678-1234-1234-1234-123456789004",
+      name: "Low",
+      color: "#4898F4",
+      emoji: "🔵",
+      level: 4,
+    },
   ],
   //TODO: make default colors better
   colorList: [
