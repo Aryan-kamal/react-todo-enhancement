@@ -27,11 +27,23 @@ export interface User {
   categories: Category[];
   deletedCategories: UUID[];
   favoriteCategories: UUID[];
+  priorities: TaskPriority[];
   colorList: string[];
   settings: AppSettings;
   theme: "system" | (string & {});
   darkmode: DarkModeOptions;
   lastSyncedAt?: Date;
+}
+
+/**
+ * Represents a task priority level.
+ */
+export interface TaskPriority {
+  id: UUID;
+  name: string;
+  color: string;
+  emoji?: string;
+  level: number; // Lower numbers = higher priority
 }
 
 /**
@@ -51,6 +63,7 @@ export interface Task {
   date: Date;
   deadline?: Date;
   category?: Category[];
+  priority?: TaskPriority;
   lastSave?: Date;
   sharedBy?: string;
   /**
@@ -93,3 +106,16 @@ export interface AppSettings {
 
 export type SortOption = "dateCreated" | "dueDate" | "alphabetical" | "custom";
 export type ReduceMotionOption = "system" | "on" | "off";
+
+/**
+ * Date filter options for tasks
+ */
+export type DateFilterOption = "all" | "today" | "thisWeek" | "customRange";
+
+/**
+ * Custom date range for filtering
+ */
+export interface TaskDateRange {
+  start: Date | null;
+  end: Date | null;
+}

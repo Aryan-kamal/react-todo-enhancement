@@ -1,7 +1,7 @@
 import { useRef, memo, useContext } from "react";
 import { Emoji } from "emoji-picker-react";
 import { DoneRounded, PushPinRounded, Link, DragIndicatorRounded } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { Tooltip, Box } from "@mui/material";
 import type { Task, UUID } from "../../types/user";
 import {
   TaskContainer,
@@ -24,7 +24,7 @@ import {
 } from "./tasks.styled";
 import { calculateDateDifference, formatDate, getFontColor, systemInfo } from "../../utils";
 import { RenderTaskDescription } from "./RenderTaskDescription";
-import { CategoryBadge } from "..";
+import { CategoryBadge, PriorityBadge } from "..";
 import { UserContext } from "../../contexts/UserContext";
 import { TaskContext } from "../../contexts/TaskContext";
 import { useSortable } from "@dnd-kit/sortable";
@@ -163,6 +163,16 @@ export const TaskItem = memo(
             <Pinned translate="yes">
               <PushPinRounded fontSize="small" /> &nbsp; Pinned
             </Pinned>
+          )}
+          {task.priority && (
+            <Box sx={{ mb: "8px" }}>
+              <PriorityBadge
+                priority={task.priority}
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: "12px" }}
+              />
+            </Box>
           )}
           <TaskHeader>
             <TaskName done={task.done}>{textHighlighter(task.name)}</TaskName>

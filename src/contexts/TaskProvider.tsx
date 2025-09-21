@@ -1,5 +1,5 @@
 import { ReactNode, useState, useCallback, useMemo, useContext } from "react";
-import { Category, SortOption, UUID } from "../types/user";
+import { Category, SortOption, UUID, DateFilterOption, TaskDateRange } from "../types/user";
 import { useStorageState } from "../hooks/useStorageState";
 import { HighlightedText } from "../components/tasks/tasks.styled";
 import { TaskContext, TaskContextType } from "./TaskContext";
@@ -27,6 +27,16 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
 
   const [moveMode, setMoveMode] = useStorageState<boolean>(false, "moveMode", "sessionStorage");
+  const [dateFilter, setDateFilter] = useStorageState<DateFilterOption>(
+    "all",
+    "dateFilter",
+    "sessionStorage",
+  );
+  const [customDateRange, setCustomDateRange] = useStorageState<TaskDateRange>(
+    { start: null, end: null },
+    "customDateRange",
+    "sessionStorage",
+  );
 
   const sortOption = user.settings.sortOption;
   const setSortOption = useCallback(
@@ -160,6 +170,10 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       setSortAnchorEl,
       moveMode,
       setMoveMode,
+      dateFilter,
+      setDateFilter,
+      customDateRange,
+      setCustomDateRange,
       updateCategory,
     }),
     [
@@ -184,6 +198,10 @@ export const TaskProvider = ({ children }: { children: ReactNode }) => {
       sortAnchorEl,
       moveMode,
       setMoveMode,
+      dateFilter,
+      setDateFilter,
+      customDateRange,
+      setCustomDateRange,
       updateCategory,
     ],
   );

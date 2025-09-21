@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, createContext } from "react";
-import type { Category, SortOption, UUID } from "../types/user";
+import type { Category, SortOption, UUID, DateFilterOption, TaskDateRange } from "../types/user";
 
 interface TaskState {
   selectedTaskId: UUID | null;
@@ -13,6 +13,8 @@ interface TaskState {
   sortOption: SortOption;
   sortAnchorEl: null | HTMLElement;
   moveMode: boolean;
+  dateFilter: DateFilterOption;
+  customDateRange: TaskDateRange;
 }
 
 interface TaskActions {
@@ -32,6 +34,8 @@ interface TaskActions {
   setSortOption: (option: SortOption) => void;
   setSortAnchorEl: Dispatch<SetStateAction<null | HTMLElement>>;
   setMoveMode: Dispatch<SetStateAction<boolean>>;
+  setDateFilter: Dispatch<SetStateAction<DateFilterOption>>;
+  setCustomDateRange: Dispatch<SetStateAction<TaskDateRange>>;
   updateCategory: (category: Partial<Category>) => void;
 }
 

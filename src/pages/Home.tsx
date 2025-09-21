@@ -18,10 +18,11 @@ import { Box, Button, CircularProgress, Tooltip, Typography } from "@mui/materia
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { AddRounded, CloseRounded, TodayRounded, UndoRounded, WifiOff } from "@mui/icons-material";
 import { UserContext } from "../contexts/UserContext";
+import { TaskContext } from "../contexts/TaskContext";
 import { useResponsiveDisplay } from "../hooks/useResponsiveDisplay";
 import { useNavigate } from "react-router-dom";
-import { AnimatedGreeting } from "../components/AnimatedGreeting";
-import { showToast } from "../utils";
+import { AnimatedGreeting } from "../components";
+import { showToast, filterTasksByDate } from "../utils";
 
 const TasksList = lazy(() =>
   import("../components/tasks/TasksList").then((module) => ({ default: module.TasksList })),
@@ -30,6 +31,7 @@ const TasksList = lazy(() =>
 const Home = () => {
   const { user, setUser } = useContext(UserContext);
   const { tasks, emojisStyle, settings, name } = user;
+  const { dateFilter, customDateRange } = useContext(TaskContext);
 
   const isOnline = useOnlineStatus();
   const n = useNavigate();
@@ -41,11 +43,15 @@ const Home = () => {
 
   // Calculate these values only when tasks change
   const taskStats = useMemo(() => {
-    const completedCount = tasks.filter((task) => task.done).length;
-    const completedPercentage = tasks.length > 0 ? (completedCount / tasks.length) * 100 : 0;
+    // Apply date filtering first
+    const filteredTasks = filterTasksByDate(tasks, dateFilter, customDateRange);
+
+    const completedCount = filteredTasks.filter((task) => task.done).length;
+    const completedPercentage =
+      filteredTasks.length > 0 ? (completedCount / filteredTasks.length) * 100 : 0;
 
     const today = new Date().setHours(0, 0, 0, 0);
-    const dueTodayTasks = tasks.filter((task) => {
+    const dueTodayTasks = filteredTasks.filter((task) => {
       if (task.deadline) {
         const taskDeadline = new Date(task.deadline).setHours(0, 0, 0, 0);
         return taskDeadline === today && !task.done;
@@ -60,8 +66,9 @@ const Home = () => {
       completedTaskPercentage: completedPercentage,
       tasksWithDeadlineTodayCount: dueTodayTasks.length,
       tasksDueTodayNames: taskNamesDueToday,
+      filteredTasksCount: filteredTasks.length,
     };
-  }, [tasks]);
+  }, [tasks, dateFilter, customDateRange]);
 
   // Memoize time-based greeting
   const timeGreeting = useMemo(() => {
@@ -122,6 +129,7 @@ const Home = () => {
           <WifiOff /> You're offline but you can use the app!
         </Offline>
       )}
+
       {tasks.length > 0 && settings.showProgressBar && (
         <TasksCountContainer>
           <TasksCount glow={settings.enableGlow}>
@@ -194,6 +202,7 @@ const Home = () => {
           </TasksCount>
         </TasksCountContainer>
       )}
+
       <Suspense
         fallback={
           <Box display="flex" justifyContent="center" alignItems="center">

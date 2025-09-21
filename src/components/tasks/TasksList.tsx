@@ -21,7 +21,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useCallback, useContext, useEffect, useMemo, useState, memo, useRef } from "react";
-import { CategoryBadge, CustomDialogTitle, EditTask, TaskItem } from "..";
+import { CategoryBadge, CustomDialogTitle, EditTask, TaskItem, FilterBar } from "..";
 import { TaskContext } from "../../contexts/TaskContext";
 import { UserContext } from "../../contexts/UserContext";
 import { useResponsiveDisplay } from "../../hooks/useResponsiveDisplay";
@@ -29,7 +29,7 @@ import { useStorageState } from "../../hooks/useStorageState";
 import { DialogBtn } from "../../styles";
 import { ColorPalette } from "../../theme/themeConfig";
 import type { Category, Task, UUID } from "../../types/user";
-import { getFontColor, showToast } from "../../utils";
+import { getFontColor, showToast, filterTasksByDate } from "../../utils";
 import {
   NoTasks,
   RingAlarm,
@@ -101,6 +101,10 @@ export const TasksList: React.FC = () => {
     sortOption,
     moveMode,
     setMoveMode,
+    dateFilter,
+    setDateFilter,
+    customDateRange,
+    setCustomDateRange,
   } = useContext(TaskContext);
   const open = Boolean(anchorEl);
 
@@ -170,9 +174,12 @@ export const TasksList: React.FC = () => {
 
   const reorderTasks = useCallback(
     (tasks: Task[]): Task[] => {
+      // Apply date filtering first
+      const dateFilteredTasks = filterTasksByDate(tasks, dateFilter, customDateRange);
+
       // Separate tasks into pinned and unpinned
-      let pinnedTasks = tasks.filter((task) => task.pinned);
-      let unpinnedTasks = tasks.filter((task) => !task.pinned);
+      let pinnedTasks = dateFilteredTasks.filter((task) => task.pinned);
+      let unpinnedTasks = dateFilteredTasks.filter((task) => !task.pinned);
 
       // Filter tasks based on the selected category
       if (selectedCatId !== undefined) {
@@ -230,7 +237,7 @@ export const TasksList: React.FC = () => {
 
       return [...pinnedTasks, ...unpinnedTasks];
     },
-    [search, selectedCatId, user.settings?.doneToBottom, sortOption],
+    [search, selectedCatId, user.settings?.doneToBottom, sortOption, dateFilter, customDateRange],
   );
 
   const orderedTasks = useMemo(() => reorderTasks(user.tasks), [user.tasks, reorderTasks]);
@@ -405,6 +412,14 @@ export const TasksList: React.FC = () => {
     <>
       <TaskMenu />
       <TasksContainer style={{ marginTop: user.settings.showProgressBar ? "0" : "24px" }}>
+        {user.tasks.length > 0 && (
+          <FilterBar
+            selectedFilter={dateFilter}
+            onFilterChange={setDateFilter}
+            customRange={customDateRange}
+            onCustomRangeChange={setCustomDateRange}
+          />
+        )}
         {user.tasks.length > 0 && (
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px", mb: "8px" }}>
             <DisabledThemeProvider>

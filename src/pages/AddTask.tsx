@@ -5,7 +5,7 @@ import { AddTaskButton, Container, StyledInput } from "../styles";
 import { AddTaskRounded, CancelRounded } from "@mui/icons-material";
 import { IconButton, InputAdornment, Tooltip } from "@mui/material";
 import { DESCRIPTION_MAX_LENGTH, TASK_NAME_MAX_LENGTH } from "../constants";
-import { ColorPicker, TopBar, CustomEmojiPicker } from "../components";
+import { ColorPicker, TopBar, CustomEmojiPicker, PrioritySelect } from "../components";
 import { UserContext } from "../contexts/UserContext";
 import { useStorageState } from "../hooks/useStorageState";
 import { useTheme } from "@emotion/react";
@@ -13,6 +13,7 @@ import { generateUUID, getFontColor, isDark, showToast } from "../utils";
 import { ColorPalette } from "../theme/themeConfig";
 import InputThemeProvider from "../contexts/InputThemeProvider";
 import { CategorySelect } from "../components/CategorySelect";
+import type { TaskPriority } from "../types/user";
 import { useToasterStore } from "react-hot-toast";
 
 const AddTask = () => {
@@ -32,6 +33,11 @@ const AddTask = () => {
   const [selectedCategories, setSelectedCategories] = useStorageState<Category[]>(
     [],
     "categories",
+    "sessionStorage",
+  );
+  const [selectedPriority, setSelectedPriority] = useStorageState<TaskPriority | null>(
+    null,
+    "priority",
     "sessionStorage",
   );
 
@@ -111,6 +117,7 @@ const AddTask = () => {
       date: new Date(),
       deadline: deadline !== "" ? new Date(deadline) : undefined,
       category: selectedCategories ? selectedCategories : [],
+      priority: selectedPriority || undefined,
     };
 
     setUser((prevUser) => ({
@@ -129,7 +136,15 @@ const AddTask = () => {
       },
     );
 
-    const itemsToRemove = ["name", "color", "description", "emoji", "deadline", "categories"];
+    const itemsToRemove = [
+      "name",
+      "color",
+      "description",
+      "emoji",
+      "deadline",
+      "categories",
+      "priority",
+    ];
     itemsToRemove.map((item) => sessionStorage.removeItem(item));
   };
 
@@ -223,6 +238,14 @@ const AddTask = () => {
               />
             </div>
           )}
+
+          <PrioritySelect
+            selectedPriority={selectedPriority}
+            onPriorityChange={setSelectedPriority}
+            priorities={user.priorities}
+            fontColor={getFontColor(theme.secondary)}
+            width="400px"
+          />
         </InputThemeProvider>
         <ColorPicker
           color={color}

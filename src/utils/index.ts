@@ -7,6 +7,14 @@ export { showToast } from "./showToast";
 export { generateUUID } from "./generateUUID";
 export { timeAgo, formatDate, calculateDateDifference } from "./timeUtils";
 export {
+  filterTasksByDate,
+  getTodayRange,
+  getThisWeekRange,
+  isDateInRange,
+  getDateRangeDisplayString,
+  isValidDateRange,
+} from "./dateFilterUtils";
+export {
   initDB,
   deleteProfilePictureFromDB,
   fileToBase64,
