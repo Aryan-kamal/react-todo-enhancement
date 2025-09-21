@@ -5,7 +5,7 @@ import type { TaskPriority } from "../types/user";
 
 interface PriorityBadgeProps {
   priority: TaskPriority;
-  size?: "small" | "medium" | "large";
+  size?: "small" | "medium";
   showEmoji?: boolean;
   showLabel?: boolean;
   variant?: "filled" | "outlined";
@@ -14,17 +14,17 @@ interface PriorityBadgeProps {
 
 const StyledPriorityBadge = styled(Chip)<{
   prioritycolor: string;
-  size: "small" | "medium" | "large";
+  size: "small" | "medium";
 }>(({ theme, prioritycolor, size }) => ({
   backgroundColor: prioritycolor,
   color: theme.palette.getContrastText(prioritycolor),
   fontWeight: 600,
-  fontSize: size === "small" ? "12px" : size === "medium" ? "14px" : "16px",
-  height: size === "small" ? "24px" : size === "medium" ? "28px" : "32px",
+  fontSize: size === "small" ? "12px" : "14px",
+  height: size === "small" ? "24px" : "28px",
   borderRadius: "12px",
   border: "none",
   "& .MuiChip-label": {
-    padding: size === "small" ? "0 8px" : size === "medium" ? "0 10px" : "0 12px",
+    padding: size === "small" ? "0 8px" : "0 10px",
     fontSize: "inherit",
     fontWeight: "inherit",
   },
@@ -34,14 +34,14 @@ const StyledPriorityBadge = styled(Chip)<{
   },
 }));
 
-const PriorityCircle = styled(Box)<{ prioritycolor: string; size: "small" | "medium" | "large" }>(
+const PriorityCircle = styled(Box)<{ prioritycolor: string; size: "small" | "medium" }>(
   ({ prioritycolor, size }) => ({
-    width: size === "small" ? "8px" : size === "medium" ? "10px" : "12px",
-    height: size === "small" ? "8px" : size === "medium" ? "10px" : "12px",
+    width: size === "small" ? "8px" : "10px",
+    height: size === "small" ? "8px" : "10px",
     borderRadius: "50%",
     backgroundColor: prioritycolor,
     display: "inline-block",
-    marginRight: size === "small" ? "4px" : size === "medium" ? "6px" : "8px",
+    marginRight: size === "small" ? "4px" : "6px",
   }),
 );
 
